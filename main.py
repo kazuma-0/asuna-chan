@@ -23,11 +23,35 @@ with open(data_file, "r") as f:
     data = json.loads(f.read())
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(data["prefix"]))
+bot.remove_command("help")
 
 
 @bot.event
 async def on_ready():
     print("Logged in as", bot.user)
+
+
+@bot.command()
+async def help(ctx):
+    embed = discord.Embed(
+        title="Yuuki Asuna",
+        description="Vice-commander of KoB, Lightning Flash, Queen Titania, Berserk Healer, "
+                    + "Goddess Stacia, and Kirito's lover.",
+         colour=discord.Color.red(),
+         url="https://swordartonline.fandom.com/wiki/Yuuki_Asuna"
+    )
+
+    embed.set_author(name=bot.user.name, icon_url=bot.user.avatar_url)
+    embed.set_footer(text=ctx.author.name, icon_url=ctx.author.avatar_url)    
+    
+    embed.set_image(url="https://cdn.discordapp.com/attachments/694146811560198196/794956119251877898/364.png")
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/694146811560198196/794955939559243816/98.png")
+    
+    embed.set_author(name=bot.user.name, icon_url=bot.user.avatar_url)
+    embed.add_field(name="help", value=f"My command prefix is `{data['prefix']}`", inline=False)
+    embed.add_field(name="mod", value="Displays moderation commands", inline=False)
+    embed.add_field(name="search", value="Displays search commands", inline=False)
+    await ctx.send(embed=embed)
 
 
 @bot.command()
