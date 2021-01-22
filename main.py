@@ -3,6 +3,8 @@ import json
 
 import discord
 
+import anilist_commands
+
 from dotenv import load_dotenv
 from discord.ext import commands
 from discord.ext.commands import has_any_role
@@ -28,6 +30,8 @@ bot.remove_command("help")
 
 @bot.event
 async def on_ready():
+    activity = discord.Game("Unital Ring")
+    await bot.change_presence(status=discord.Status.online, activity=activity)
     print("Logged in as", bot.user)
 
 
@@ -72,5 +76,7 @@ if not os.getenv("TESTING"):
     import keep_alive
     keep_alive.keep_alive()
 
+# Add the anilist cog
+bot.add_cog(anilist_commands.AniList(bot))
 # Start the bot
 bot.run(os.getenv("TOKEN"))
