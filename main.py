@@ -1,7 +1,11 @@
 import os
+from dotenv import load_dotenv
 import discord
 
+load_dotenv()
+
 client = discord.Client()
+
 
 @client.event
 async def on_ready():
