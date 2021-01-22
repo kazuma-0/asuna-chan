@@ -1,22 +1,46 @@
 import os
-from dotenv import load_dotenv
+import json
+
 import discord
+
+from dotenv import load_dotenv
+from discord.ext import commands
+from discord.ext.commands import has_any_role
 
 load_dotenv()
 
-client = discord.Client()
+# Load variables
+if os.getenv("TESTING"):
+    # If we're on testing, read testing.json
+    # This file is gitignored, so it can have channel IDs and stuff from testing servers
+    data_file = "testing.json"
+else:
+    # Otherwise read data.json
+    data_file = "data.json"
 
 
-@client.event
+with open(data_file, "r") as f:
+    data = json.loads(f.read())
+
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(data["prefix"]))
+
+
+@bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
+    print("Logged in as", bot.user)
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
 
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
+@bot.command()
+@has_any_role(*data["say_whitelist"])
+async def say(ctx, *, message):
+    await ctx.message.delete()
+    await ctx.send(message)
 
-client.run(os.getenv("TOKEN"))
+
+@say.error
+async def say_error(ctx, error):
+    if isinstance(error, commands.MissingAnyRole):
+        await ctx.send("no u")
+
+
+bot.run(os.getenv("TOKEN"))
