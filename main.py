@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from discord.ext.commands import has_any_role
 
+import keep_alive
+
 load_dotenv()
 
 # Load variables
@@ -43,4 +45,8 @@ async def say_error(ctx, error):
         await ctx.send("no u")
 
 
+# Start webserver for uptime robot to ping
+keep_alive.keep_alive()
+
+# Start the bot
 bot.run(os.getenv("TOKEN"))
