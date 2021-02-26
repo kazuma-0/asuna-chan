@@ -3,7 +3,7 @@ import json
 
 import discord
 
-import anilist_commands
+from Cogs import anilist_commands, spoiler
 
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -78,5 +78,7 @@ if not os.getenv("TESTING"):
 
 # Add the anilist cog
 bot.add_cog(anilist_commands.AniList(bot))
+# Add the spoiler cog
+bot.add_cog(spoiler.Spoiler.spoiler(bot))
 # Start the bot
 bot.run(os.getenv("TOKEN"))
